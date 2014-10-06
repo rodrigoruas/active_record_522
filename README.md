@@ -14,7 +14,7 @@ Now you can play with the `Restaurant` model, example
 
 ```bash
 $ irb
-$ irb(main):001:0> load "config/application.rb"
-$ Restaurant.create(name: "Corba Salonu", address: "rue du fbg st-denis", rating: 4)
+irb(main):001:0> load "config/application.rb"
+irb(main):002:0> Restaurant.create(name: "Corba Salonu", address: "rue du fbg st-denis", rating: 4)
 ```
 
