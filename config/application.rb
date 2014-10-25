@@ -1,10 +1,10 @@
 require 'active_record'
 require 'sqlite3'
+require 'yaml'
 
-DB_PATH = File.expand_path("#{__dir__}/../db/lefooding.sqlite3")
-ENV['DATABASE_URL'] = "sqlite3:#{DB_PATH}"
+# This is some boilerplate code to read the config/database.yml file
+# And connect to the database
 
-ActiveRecord::Base.establish_connection
-
-require_relative '../models/restaurant'
-
+config_path = File.join(File.dirname(__FILE__), "database.yml")
+ActiveRecord::Base.configurations = YAML.load_file(config_path)
+ActiveRecord::Base.establish_connection(:development)

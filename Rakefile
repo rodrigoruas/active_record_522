@@ -1,30 +1,46 @@
-require 'rake'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
+
+desc "Look for style guide offenses in your code"
+task :rubocop do
+  sh "rubocop --format simple || true"
+end
+
+task default: [:rubocop, :spec]
+
+## Active Record related rake tasks
+
 require_relative 'config/application'
 
 namespace :db do
   desc 'create the database'
   task :create do
-    puts "Creating #{DB_PATH}..."
-    touch DB_PATH
+    puts "Creating #{db_path}..."
+    touch db_path
   end
 
   desc 'drop the database'
   task :drop do
-    puts "Deleting #{DB_PATH}..."
-    rm_f DB_PATH
+    puts "Deleting #{db_path}..."
+    rm_f db_path
   end
 
-  desc 'migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog).'
+  desc 'migrate the database (options: VERSION=x).'
   task :migrate do
     ActiveRecord::Migrator.migrations_paths << File.dirname(__FILE__) + 'db/migrate'
-    ActiveRecord::Migration.verbose = ENV['VERBOSE'] ? ENV['VERBOSE'] == 'true' : true
-    ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, ENV['VERSION'] ? ENV['VERSION'].to_i : nil) do |migration|
-      ENV['SCOPE'].blank? || (ENV['SCOPE'] == migration.scope)
-    end
+    ActiveRecord::Migration.verbose = true
+    version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
+    ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, version)
   end
 
   desc 'Retrieves the current schema version number'
   task :version do
     puts "Current version: #{ActiveRecord::Migrator.current_version}"
+  end
+
+  private
+
+  def db_path
+    ActiveRecord::Base.configurations["development"]["database"]
   end
 end
