@@ -38,6 +38,12 @@ namespace :db do
     puts "Current version: #{ActiveRecord::Migrator.current_version}"
   end
 
+  desc 'populate the database with sample data'
+  task :seed do
+    Dir["#{__dir__}/app/models/*.rb"].each {|file| require file }
+    require "#{__dir__}/db/seeds.rb"
+  end
+
   private
 
   def db_path
