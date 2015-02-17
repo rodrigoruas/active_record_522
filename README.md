@@ -1,9 +1,6 @@
-karr-db-03
-==========
-
 ## ActiveRecord boilerplate
 
-This is a minimalist implementation of ActiveRecord to live-code a demo for @LeWagon students
+This is a minimalist implementation of ActiveRecord part of [Karr examples](https://github.com/lewagon/karr-examples)
 
 - clone the repo
 - run `rake db:create` to create your db
