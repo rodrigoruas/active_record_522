@@ -14,3 +14,6 @@ logger.formatter = proc do |severity, datetime, progname, msg|
    "#{msg}\n"
 end
 ActiveRecord::Base.logger = logger
+
+# Load all models!
+Dir["#{__dir__}/../app/models/*.rb"].each {|file| require file }
