@@ -1,6 +1,6 @@
 ## ActiveRecord boilerplate
 
-This is a minimalist implementation of ActiveRecord part of [Karr examples](https://github.com/lewagon/karr-examples)
+This is a minimalist implementation of ActiveRecord with one `Restaurant` model, part of [Karr examples](https://github.com/lewagon/karr-examples)
 
 - clone the repo
 - run `rake db:create` to create your db
