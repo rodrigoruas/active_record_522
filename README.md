@@ -11,7 +11,6 @@ Now you can play with the `Restaurant` model:
 ```bash
 $ irb
 irb> load "config/application.rb"
-irb> load "app/models/restaurant.rb"
 irb> restaurant = Restaurant.new(name: "La Tour d'Argent", address: "15 Quai de la Tournelle, 75005 Paris")
 irb> restaurant.persisted?
      # => false
