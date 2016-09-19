@@ -1,4 +1,4 @@
-## ActiveRecord Basics Boilerplate
+## ActiveRecord Boilerplate
 
 This is a starting point for the Activerecord Basics lecture using sqlite. During the lecture, you need to:
 
