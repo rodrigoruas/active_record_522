@@ -13,12 +13,18 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (7.1.2)
+    coderay (1.1.1)
     concurrent-ruby (1.0.2)
     diff-lcs (1.2.5)
     faker (1.6.6)
       i18n (~> 0.5)
     i18n (0.7.0)
+    method_source (0.8.2)
     minitest (5.9.0)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
     rake (11.2.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
@@ -33,6 +39,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
+    slop (3.6.0)
     sqlite3 (1.3.11)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
@@ -44,6 +51,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   faker
+  pry
   rake
   rspec
   sqlite3

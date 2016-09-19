@@ -8,6 +8,15 @@ end
 
 task default: [:rubocop, :spec]
 
+desc "Open an irb session preloaded with the environment"
+task :console do
+  require 'rubygems'
+  require 'pry'
+  require_relative "config/application"
+
+  Pry.start
+end
+
 ## Active Record related rake tasks
 
 require_relative 'config/application'
@@ -43,7 +52,7 @@ namespace :db do
     Dir["#{__dir__}/app/models/*.rb"].each {|file| require file }
     require "#{__dir__}/db/seeds.rb"
   end
-  
+
   desc 'Gives you a timestamp for your migration file name'
   task :timestamp do
     puts DateTime.now.strftime('%Y%m%d%H%M%S')
