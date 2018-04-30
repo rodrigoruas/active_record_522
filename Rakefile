@@ -36,10 +36,17 @@ namespace :db do
 
   desc 'migrate the database (options: VERSION=x).'
   task :migrate do
-    ActiveRecord::Migrator.migrations_paths << File.dirname(__FILE__) + 'db/migrate'
+    ActiveRecord::Migrator.migrations_paths << \
+      File.dirname(__FILE__) + 'db/migrate'
     ActiveRecord::Migration.verbose = true
     version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
-    ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, version)
+    if defined?(ActiveRecord::MigrationContext)
+      ActiveRecord::MigrationContext
+        .new(ActiveRecord::Migrator.migrations_paths)
+        .migrate(version)
+    else
+      ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, version)
+    end
   end
 
   desc 'Retrieves the current schema version number'
