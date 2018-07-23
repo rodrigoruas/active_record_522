@@ -21,7 +21,7 @@ end
 
 require_relative 'config/application'
 
-namespace :db do
+db_namespace = namespace :db do
   desc 'create the database'
   task :create do
     puts "Creating #{db_path}..."
@@ -47,6 +47,8 @@ namespace :db do
     else
       ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, version)
     end
+
+    db_namespace["schema:dump"].invoke
   end
 
   desc 'Retrieves the current schema version number'
@@ -63,6 +65,19 @@ namespace :db do
   desc 'Gives you a timestamp for your migration file name'
   task :timestamp do
     puts DateTime.now.strftime('%Y%m%d%H%M%S')
+  end
+
+  namespace :schema do
+    desc 'Create a db/schema.rb file that can be portably used against any DB supported by AR'
+    task :dump do
+
+      require 'active_record/schema_dumper'
+      filename = 'db/schema.rb'
+
+      File.open(filename, "w:utf-8") do |file|
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+      end
+    end
   end
 
   private
