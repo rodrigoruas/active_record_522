@@ -10,3 +10,5 @@ puts 'Creating 100 fake restaurants...'
   restaurant.save!
 end
 puts 'Finished!'
+
+
