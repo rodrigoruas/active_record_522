@@ -1,26 +1,24 @@
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
-desc "Look for style guide offenses in your code"
+require_relative 'config/application'
+
+desc 'Look for style guide offenses in your code'
 task :rubocop do
-  sh "rubocop --format simple || true"
+  sh 'rubocop --format simple || true'
 end
 
 task default: [:rubocop, :spec]
 
-desc "Open an irb session preloaded with the environment"
+desc 'Open an irb session preloaded with the environment'
 task :console do
   require 'rubygems'
   require 'pry'
-  require_relative "config/application"
 
   Pry.start
 end
 
 ## Active Record related rake tasks
-
-require_relative 'config/application'
-
 db_namespace = namespace :db do
   desc 'create the database'
   task :create do
@@ -36,19 +34,8 @@ db_namespace = namespace :db do
 
   desc 'migrate the database (options: VERSION=x).'
   task :migrate do
-    ActiveRecord::Migrator.migrations_paths << \
-      File.dirname(__FILE__) + 'db/migrate'
-    ActiveRecord::Migration.verbose = true
-    version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
-    if defined?(ActiveRecord::MigrationContext)
-      ActiveRecord::MigrationContext
-        .new(ActiveRecord::Migrator.migrations_paths)
-        .migrate(version)
-    else
-      ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, version)
-    end
-
-    db_namespace["schema:dump"].invoke
+    require_relative "../../utils"
+    FullStackChallengesUtils.rake_migrate(db_namespace, File.dirname(__FILE__))
   end
 
   desc 'Retrieves the current schema version number'
@@ -58,7 +45,6 @@ db_namespace = namespace :db do
 
   desc 'populate the database with sample data'
   task :seed do
-    Dir["#{__dir__}/app/models/*.rb"].each {|file| require file }
     require "#{__dir__}/db/seeds.rb"
   end
 
@@ -67,22 +53,9 @@ db_namespace = namespace :db do
     puts DateTime.now.strftime('%Y%m%d%H%M%S')
   end
 
-  namespace :schema do
-    desc 'Create a db/schema.rb file that can be portably used against any DB supported by AR'
-    task :dump do
-
-      require 'active_record/schema_dumper'
-      filename = 'db/schema.rb'
-
-      File.open(filename, "w:utf-8") do |file|
-        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
-      end
-    end
-  end
-
   private
 
   def db_path
-    ActiveRecord::Base.configurations["development"]["database"]
+    ActiveRecord::Base.configurations['development']['database']
   end
 end
