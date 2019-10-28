@@ -34,8 +34,12 @@ db_namespace = namespace :db do
 
   desc 'migrate the database (options: VERSION=x).'
   task :migrate do
-    require_relative "../../utils"
-    FullStackChallengesUtils.rake_migrate(db_namespace, File.dirname(__FILE__))
+    ActiveRecord::Migrator.migrations_paths = [File.join(__FILE__, 'db/migrate')]
+    ActiveRecord::Migration.verbose = true
+    version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
+    args = [ActiveRecord::Migrator.migrations_paths, ActiveRecord::SchemaMigration]
+    ActiveRecord::MigrationContext.new(*args).migrate(version)
+    db_namespace["schema:dump"].invoke
   end
 
   desc 'Retrieves the current schema version number'
@@ -51,6 +55,18 @@ db_namespace = namespace :db do
   desc 'Gives you a timestamp for your migration file name'
   task :timestamp do
     puts DateTime.now.strftime('%Y%m%d%H%M%S')
+  end
+
+  namespace :schema do
+    desc 'Create a db/schema.rb file that can be portably used against any DB supported by AR'
+    task :dump do
+      require 'active_record/schema_dumper'
+      filename = 'db/schema.rb'
+
+      File.open(filename, "w:utf-8") do |file|
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+      end
+    end
   end
 
   private
