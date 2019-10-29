@@ -34,7 +34,7 @@ db_namespace = namespace :db do
 
   desc 'migrate the database (options: VERSION=x).'
   task :migrate do
-    ActiveRecord::Migrator.migrations_paths = [File.join(__FILE__, 'db/migrate')]
+    ActiveRecord::Migrator.migrations_paths = [File.join(__dir__, 'db/migrate')]
     ActiveRecord::Migration.verbose = true
     version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
     args = [ActiveRecord::Migrator.migrations_paths, ActiveRecord::SchemaMigration]
